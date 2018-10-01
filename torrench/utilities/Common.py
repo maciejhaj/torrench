@@ -69,30 +69,10 @@ class Common:
         Used to fetch 'url' page and prepare soup.
         It also gives the time taken to fetch url.
         """
-        try:
-            try:
-                headers = {"user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/57.0"}
-                self.start_time = time.time()
-                self.raw = requests.get(url, timeout=15, headers=headers)
-                self.page_fetch_time = time.time() - self.start_time
-                self.logger.debug("returned status code: %d for url %s" % (self.raw.status_code, url))
-            except (requests.exceptions.ConnectionError, requests.exceptions.ReadTimeout) as e:
-                self.logger.error(e)
-                self.logger.exception("Stacktrace...")
-                return -1
-            except KeyboardInterrupt as e:
-                self.logger.exception(e)
-                print("\nAborted!\n")
-            self.raw = self.raw.content
-            self.soup = BeautifulSoup(self.raw, 'lxml')
-            if self.soup is None or self.soup.find() is None:
-                self.logger.debug("BeautifulSoup found nothing!")
-                return -1
-            return self.soup, self.page_fetch_time
-        except KeyboardInterrupt as e:
-            print("Aborted!")
-            self.logger.exception(e)
-            sys.exit(2)
+        self.start_time = time.time()
+        self.soup = self.http_request(url)
+        self.page_fetch_time = time.time() - self.start_time
+        return self.soup, self.page_fetch_time
 
     def http_request(self, url):
         """
@@ -103,12 +83,16 @@ class Common:
         """
         try:
             try:
-                self.raw = requests.get(url, timeout=15)
+                headers = {"user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/57.0"}
+                self.raw = requests.get(url, timeout=15, headers=headers)
                 self.logger.debug("returned status code: %d for url %s" % (self.raw.status_code, url))
             except (requests.exceptions.ConnectionError, requests.exceptions.ReadTimeout) as e:
                 self.logger.error(e)
                 self.logger.exception("Stacktrace...")
                 return -1
+            except KeyboardInterrupt as e:
+                self.logger.exception(e)
+                print("\nAborted!\n")
             self.raw = self.raw.content
             self.soup = BeautifulSoup(self.raw, 'lxml')
             if self.soup is None or self.soup.find() is None:

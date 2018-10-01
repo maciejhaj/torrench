@@ -100,17 +100,14 @@ class Config(Common):
                 print("Could not get proxies")
                 print("Something went wrong! See logs for details. Exiting!")
                 sys.exit(2)
-        if name == "TPB_URL":
-            link = soup.find_all('td', class_='site')
+            if name == "TPB_URL":
+                link = soup.find_all('td', class_='site')
+            elif name == "1337X_URL":
+                link = soup.findAll('td', class_='text-left')
             del self.urllist[-1]
             for i in link:
                 temp.append(i.a["href"])
             self.urllist.extend(temp)
-        elif name == "1337X_URL":
-            link = soup.findAll('td', class_='text-left')
-            del self.urllist[-1]
-            for i in link:
-                temp.append(i.a["href"])
-            self.urllist.extend(temp)
+
         self.logger.debug("got %d proxies!" % (len(self.urllist)))
         return self.urllist
