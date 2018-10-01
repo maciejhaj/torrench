@@ -64,7 +64,7 @@ class KickassTorrents(Config):
             print("Trying %s" % (self.colorify("yellow", proxy)))
             self.logger.debug("Trying proxy: %s" % (proxy))
             self.soup = self.http_request(proxy)
-            if self.soup.find('a')['href'] != proxy + "/full/" or self.soup == -1:
+            if self.soup == -1 or self.soup.find('a')['href'] != proxy + "/full/":
                 print("Bad proxy!")
                 count += 1
                 if count == len(self.proxies):

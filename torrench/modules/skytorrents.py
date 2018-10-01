@@ -68,7 +68,7 @@ class SkyTorrents(Config):
                 """
                 self.logger.debug("Carrying out test for string 'hello'")
                 self.soup = self.http_request(proxy + "/search/all/ed/1/?l=en-us&q=hello")
-                if self.soup.find_all('tr')[1] is None or self.soup is None or self.soup == -1:
+                if self.soup is None or self.soup == -1 or self.soup.find_all('tr')[1] is None:
                     print("Bad proxy!")
                     count += 1
                     if count == len(self.proxies):
