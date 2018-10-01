@@ -84,9 +84,14 @@ class Config(Common):
         self.config.read(self.config_file)
 
         name = '{}_URL'.format(name.upper())
-
-        self.url = self.config.get('Torrench-Config', name)
-        self.urllist = self.url.split()
+        try:
+            self.url = self.config.get('Torrench-Config', name)
+            self.urllist = self.url.split()
+        except Exception as e:
+            self.logger.exception(e)
+            print("Error message: %s" % (e))
+            print("Something went wrong getting config! Try torrench -U. Exiting!")
+            sys.exit(2)
 
         if name == "TPB_URL" or name == "1337X_URL":
             soup = self.http_request(self.urllist[-1])
