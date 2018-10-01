@@ -88,15 +88,19 @@ class Config(Common):
         self.url = self.config.get('Torrench-Config', name)
         self.urllist = self.url.split()
 
-        if name == 'TPB_URL':
+        if name == "TPB_URL" or name == "1337X_URL":
             soup = self.http_request(self.urllist[-1])
+            if soup == -1:
+                self.logger.debug("could not get proxies")
+                print("Something went wrong! See logs for details. Exiting!")
+                sys.exit(2)
+        if name == "TPB_URL":
             link = soup.find_all('td', class_='site')
             del self.urllist[-1]
             for i in link:
                 temp.append(i.a["href"])
             self.urllist.extend(temp)
         elif name == "1337X_URL":
-            soup = self.http_request(self.urllist[-1])
             link = soup.findAll('td', class_='text-left')
             del self.urllist[-1]
             for i in link:
