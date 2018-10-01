@@ -17,6 +17,7 @@ class LibGen(Config):
     def __init__(self, isbn):
         """Initialisations."""
         Config.__init__(self)
+        self.class_name = self.__class__.__name__.lower()
         self.proxies = self.get_proxies('libgen')
         self.proxy = self.proxies[0]
         self.logger = logging.getLogger('log1')
@@ -25,6 +26,7 @@ class LibGen(Config):
         self.mapper = []
         self.mapper2 = []
         self.total_fetch_time = 0
+        self.oplist = []
         self.masterlist = []
         self.headers = [
                 'Author(s)',
@@ -91,8 +93,8 @@ class LibGen(Config):
         Text includes instructions, total torrents fetched, total pages,
         and total time taken to fetch results.
         """
-        oplist = [self.index, self.total_fetch_time]
-        self.after_output('libgen', oplist)
+        self.oplist = [self.index, self.total_fetch_time]
+        self.after_output(self.oplist)
 
     def select_torrent(self):
         """
