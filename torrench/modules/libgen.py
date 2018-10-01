@@ -25,7 +25,8 @@ class LibGen(Config):
         self.mapper = []
         self.mapper2 = []
         self.total_fetch_time = 0
-        self.output_headers = [
+        self.masterlist = []
+        self.headers = [
                 'Author(s)',
                 'Title',
                 'INDEX',
@@ -77,7 +78,6 @@ class LibGen(Config):
                     str(self.index) + "--", publisher, year, language]
                 masterlist.append(self.mylist)
             self.logger.debug("Results fetched successfully!")
-            self.show_output(masterlist, self.output_headers)
         except Exception as e:
             self.logger.exception(e)
             print("Error message: %s" % (e))
@@ -174,6 +174,7 @@ def main(isbn):
     print("\n[LibGen]\n")
     lgn = LibGen(isbn)
     lgn.search_torrent()
+    lgn.show_output()
     lgn.after_output_text()
     lgn.select_torrent()
 
