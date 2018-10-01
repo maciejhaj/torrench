@@ -85,6 +85,9 @@ class Common:
                 print("\nAborted!\n")
             self.raw = self.raw.content
             self.soup = BeautifulSoup(self.raw, 'lxml')
+            if self.soup is None or self.soup.find() is None:
+                self.logger.debug("BeautifulSoup found nothing!")
+                return -1
             return self.soup, self.page_fetch_time
         except KeyboardInterrupt as e:
             print("Aborted!")
