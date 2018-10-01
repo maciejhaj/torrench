@@ -1,6 +1,7 @@
 """ Config module."""
 import logging
 import os
+import sys
 from configparser import SafeConfigParser
 
 from torrench.utilities.Common import Common
@@ -90,13 +91,13 @@ class Config(Common):
         except Exception as e:
             self.logger.exception(e)
             print("Error message: %s" % (e))
-            print("Something went wrong getting config! Try torrench -U. Exiting!")
+            print("Something went wrong getting configuration! Try torrench -U. Exiting!")
             sys.exit(2)
 
         if name == "TPB_URL" or name == "1337X_URL":
             soup = self.http_request(self.urllist[-1])
             if soup == -1:
-                self.logger.debug("could not get proxies")
+                print("Could not get proxies")
                 print("Something went wrong! See logs for details. Exiting!")
                 sys.exit(2)
         if name == "TPB_URL":
