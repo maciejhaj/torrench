@@ -518,6 +518,15 @@ class Common:
                     self.logger.debug("torrench.ini file not found!")
                     return
                 """
+                [client = aria2p]
+                    > Load torrent to aria2p
+                    > Torrent is added to daemon using `aria2cd`.
+                    > Requires running `aria2c`.
+
+                    1. For authentication:
+                        Use variable SECRET defined in config file 
+                    2. For PORT:
+                        Set the PORT variables in torrench.ini file.
                 [client = Transmission (transmission-remote)]
                     > Load torrent to transmission client
                     > Torrent is added to daemon using `transmission-remote`.
@@ -536,7 +545,21 @@ class Common:
                     SERVER - localhost (127.0.0.1)
                     PORT - 9091
                 """
-                if client == 'transmission-remote':
+                if client == 'aria2p':
+                    port = self.config.get('Torrench-Config', 'PORT')
+                    secret = self.config.get('Torrench-Config', 'SECRET')
+                    if port == '':
+                        port = "6800"
+                    p = subprocess.Popen([client, '--port', port, '--secret', secret, 'add', link], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+                    e = p.communicate()  # `e` is a tuple.
+                    error = e[1].decode('utf-8')
+                    if error != '':
+                        print(self.colorify("red", "[ERROR] %s" % (error)))
+                        self.logger.error(error)
+                    else:
+                        print(self.colorify("green", "Success (PID: %d)") % (p.pid))
+                        self.logger.debug("torrent added! (PID: %d)" % (p.pid))
+                elif client == 'transmission-remote':
                     server = self.config.get('Torrench-Config', 'SERVER')
                     port = self.config.get('Torrench-Config', 'PORT')
                     if server == '':
